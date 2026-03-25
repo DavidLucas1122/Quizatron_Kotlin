@@ -11,7 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.quiz.screens.FinalScreen
 import com.example.quiz.screens.InicioScreen
+import com.example.quiz.screens.Pergunta1
+import com.example.quiz.screens.Pergunta2
+import com.example.quiz.screens.Pergunta3
 import com.example.quiz.ui.theme.QuizTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,9 +25,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuizTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    InicioScreen (
-                        modifier = Modifier.padding(innerPadding),
-                    )
+                    //  InicioScreen (modifier = Modifier.padding(innerPadding),)
+                    // Pergunta1 (modifier = Modifier.padding(innerPadding),)
+                    // Pergunta2 (modifier = Modifier.padding(innerPadding),)
+                    // Pergunta3 (modifier = Modifier.padding(innerPadding),)
+                    FinalScreen (modifier = Modifier.padding(innerPadding),)
+
+
                 }
             }
         }

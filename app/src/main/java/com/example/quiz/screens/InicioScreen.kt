@@ -7,8 +7,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.quiz.R
+import com.example.quiz.components.BotaoStart
+import com.example.quiz.components.Logo
 
 @Composable
 fun InicioScreen(modifier: Modifier = Modifier) {
@@ -36,36 +40,23 @@ fun InicioScreen(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier.align(Alignment.Center)
                 .fillMaxWidth()
-                .padding(32.dp),
+                .padding(80.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(40.dp)
 
         ) {
-            Image(
-                modifier = Modifier.size(140.dp),
-                painter = painterResource(R.drawable.quiz),
-                contentDescription = "Logo"
-            )
+
+            Logo(size = 140.dp)
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             Text(
                 text = "QUIZATRON 3000",
-                fontSize = 30.sp
+                fontSize = 30.sp,
+                fontWeight = FontWeight.SemiBold
             )
-            OutlinedButton(
 
-                onClick = {},
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(R.color.amarelo)
-                ),
-                modifier = Modifier.fillMaxWidth()
-
-            ) {
-                Text(
-                    text = "COMEÇAR!",
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                )
-            }
+            BotaoStart(text = "Começar", modifier = Modifier.fillMaxWidth(),onClick = {})
         }
     }
 }
