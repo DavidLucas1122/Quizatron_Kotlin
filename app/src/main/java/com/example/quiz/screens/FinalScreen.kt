@@ -24,13 +24,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.quiz.R
 import com.example.quiz.components.BotaoStart
 import com.example.quiz.components.CardNumeroPergunta
 import com.example.quiz.components.Logo
 
 @Composable
-fun FinalScreen(modifier: Modifier = Modifier) {
+fun FinalScreen(navController: NavController) {
 
     Box (
         modifier = Modifier.fillMaxSize()
@@ -103,7 +104,12 @@ fun FinalScreen(modifier: Modifier = Modifier) {
                 }
             }
 
-            BotaoStart(text = "JOGAR NOVAMENTE", modifier = Modifier.fillMaxWidth(0.6f), onClick = {})
+                BotaoStart(text = "JOGAR NOVAMENTE",
+                    modifier = Modifier.fillMaxWidth(0.6f),
+                    onClick = {
+                    navController.navigate(route = "perguntas")
+                }
+            )
 
         }
     }

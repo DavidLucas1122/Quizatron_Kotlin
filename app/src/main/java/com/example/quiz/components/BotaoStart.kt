@@ -21,7 +21,7 @@ fun BotaoStart(
     onClick: () -> Unit
 ) {
     OutlinedButton(
-        onClick = {onClick},
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = colorResource(R.color.amarelo)
         ),

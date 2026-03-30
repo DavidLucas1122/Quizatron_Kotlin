@@ -27,12 +27,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.quiz.R
 import com.example.quiz.components.BotaoStart
 import com.example.quiz.components.Logo
 
 @Composable
-fun InicioScreen(modifier: Modifier = Modifier) {
+fun InicioScreen(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize()
             .background(colorResource(id = R.color.azul))
@@ -56,7 +57,12 @@ fun InicioScreen(modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.SemiBold
             )
 
-            BotaoStart(text = "Começar", modifier = Modifier.fillMaxWidth(),onClick = {})
+            BotaoStart(
+                text = "COMEÇAR", modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    navController.navigate(route = "perguntas")
+                }
+            )
         }
     }
 }
