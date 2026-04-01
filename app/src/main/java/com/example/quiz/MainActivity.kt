@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -45,7 +46,10 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {
                         composable (route = "inicio") { InicioScreen(navController = navController) }
-                        composable( route = "perguntas" ) { PerguntasScreen(navController = navController) }
+                        composable( route = "perguntas" ) { PerguntasScreen(
+                            navController = navController,
+                            quizScreenViewModel = viewModel())
+                        }
                         composable( route = "final" ) {FinalScreen(navController = navController) }
                     }
                 }

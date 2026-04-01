@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,19 +34,23 @@ import com.example.quiz.components.Logo
 import com.example.quiz.components.Pergunta
 
 @Composable
-fun PerguntasScreen(navController: NavController) {
+fun PerguntasScreen(
+    navController: NavController,
+    quizScreenViewModel: PerguntasScreenViewModel
+) {
 
-    val numeroPergunta by PerguntasScreenViewModel().numeroPerguntas.observeAsState(initial = 1)
-    val numeroAcertos by PerguntasScreenViewModel().numeroAcertos.observeAsState(initial = 1)
-    val pergunta = PerguntasScreenViewModel.lis
+    val acertos by quizScreenViewModel.acertos.observeAsState(0)
 
+    val alternativaSelecionada by quizScreenViewModel.alternativaSelecionada.observeAsState("")
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(colorResource(R.color.rosa))
     ) {
         Column(
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier
+                .align(Alignment.Center)
                 .fillMaxWidth()
                 .padding(30.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -56,7 +62,8 @@ fun PerguntasScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Card(
-                modifier = Modifier.width(250.dp)
+                modifier = Modifier
+                    .width(250.dp)
                     .height(60.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = colorResource(R.color.verde)
@@ -67,28 +74,58 @@ fun PerguntasScreen(navController: NavController) {
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CardNumeroPergunta(numero = numeroPergunta)
+                    CardNumeroPergunta(numero = 0)
                 }
             }
 
-            Card(
-                modifier = Modifier. fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 3.dp
-                )
-            ) {
-                Column (
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Pergunta(
-                        text = "Qual a Capital da França"
-                    )
-
-                    listaDePerguntas
+            CardPerguntas(
+                pergunta = "Qual a capital da França?",
+                alternativas = listOf("Londres", "Berlim", "Paris", "Madrid"),
+                alternativaCorreta = "Paris",
+                alternativaSelecionada = alternativaSelecionada,
+                respondeuQuestao = { alternativa ->
+                    quizScreenViewModel.alterarAlternativaSelecionada(alternativa)
+                    quizScreenViewModel.incrementaPontuacao(alternativaCorreta = "Paris")
                 }
+            )
+        }
+    }
+}
+
+@Composable
+fun CardPerguntas(
+    pergunta: String,
+    alternativas: List<String>,
+    alternativaCorreta: String,
+    alternativaSelecionada: String,
+    respondeuQuestao: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+
+    Card(
+        modifier = Modifier. fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        )
+        ) {
+
+            Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Pergunta(text = pergunta)
+
+            alternativas.forEach { alternativa ->
+                BotaoAlternativa(
+                    text = alternativa,
+                    onClick = {
+                        respondeuQuestao(alternativa)
+                    }
+                )
             }
         }
     }

@@ -6,23 +6,22 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 class PerguntasScreenViewModel {
+    private val _acertos = MutableLiveData<Int>(0)
 
-    val listaDePerguntas = listOf(
-        PerguntaModelo("Qual a capital da França?", listOf("Londres", "Paris", "Berlim", "Itapevi"), 1),
-        PerguntaModelo("2 + 2 é?", listOf("3", "4", "5", "222222222"), 1),
-        PerguntaModelo("Qual é o primeiro Pokémon Criado", listOf("Rhydon", "Bulbasaur", "Mew", "Arceus"), 0)
-    )
+    private val _alternativaSelecionada = MutableLiveData<String>()
 
+    val acertos: LiveData<Int> = _acertos
 
-    private val _numeroAcertos = MutableLiveData<Int>(0)
-    private val _numeroPerguntaState = MutableLiveData<Int>(1)
+    val alternativaSelecionada: LiveData<String> = _alternativaSelecionada
 
-    val numeroAcertos: LiveData<Int> = _numeroAcertos
-    val numeroPerguntas: LiveData<Int> = _numeroPerguntaState
+    fun incrementaPontuacao(alternativaCorreta: String) {
+        if(_alternativaSelecionada.value == alternativaCorreta) {
+            _acertos.value = _acertos.value!! + 1
+        }
 
-    fun respostaIncorreta () {
     }
 
-    fun respostaCorreta () {
+    fun alterarAlternativaSelecionada(alternativa: String) {
+        _alternativaSelecionada.value = alternativa
     }
 }
