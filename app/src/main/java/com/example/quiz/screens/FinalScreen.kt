@@ -1,6 +1,5 @@
 package com.example.quiz.screens
 
-import android.R.attr.text
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,11 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,25 +27,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.quiz.R
 import com.example.quiz.components.BotaoStart
-import com.example.quiz.components.CardNumeroPergunta
 import com.example.quiz.components.Logo
+import com.example.quiz.screens.perguntas.PerguntasScreenViewModel
 
 @Composable
-fun FinalScreen(navController: NavController) {
+fun FinalScreen(
+    navController: NavController,
+    quizScreenViewModel: PerguntasScreenViewModel
+) {
 
-    Box (
-        modifier = Modifier.fillMaxSize()
+    val acertos by quizScreenViewModel.acertos.observeAsState(0)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
             .padding(top = 50.dp)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(40.dp)
         ) {
 
             Logo(size = 90.dp)
-
 
             Column(
                 modifier = Modifier
@@ -53,15 +57,15 @@ fun FinalScreen(navController: NavController) {
                     .background(colorResource(R.color.azul)),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
-
             ) {
+
                 Card(
                     modifier = Modifier
                         .padding(30.dp)
                         .fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                            containerColor = Color.Transparent
-                            )
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Transparent
+                    )
                 ) {
 
                     Column(
@@ -69,10 +73,9 @@ fun FinalScreen(navController: NavController) {
                             .fillMaxWidth()
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        // Card Bom Trabalho
+
                         Card(
                             modifier = Modifier
                                 .width(250.dp)
@@ -97,20 +100,25 @@ fun FinalScreen(navController: NavController) {
                         Spacer(modifier = Modifier.height(30.dp))
 
                         Text(
-                            text = "Você Acertou 1 de 3 Perguntas",
+                            text = "Você acertou $acertos de ${quizScreenViewModel.perguntas.size} perguntas",
                             fontSize = 20.sp
                         )
                     }
                 }
             }
 
-                BotaoStart(text = "JOGAR NOVAMENTE",
-                    modifier = Modifier.fillMaxWidth(0.6f),
-                    onClick = {
-                    navController.navigate(route = "perguntas")
+            BotaoStart(
+                text = "JOGAR NOVAMENTE",
+                modifier = Modifier.fillMaxWidth(0.6f),
+                onClick = {
+
+                    quizScreenViewModel.reiniciarQuiz()
+
+                    navController.navigate("perguntas") {
+                        popUpTo("inicio")
+                    }
                 }
             )
-
         }
     }
 }

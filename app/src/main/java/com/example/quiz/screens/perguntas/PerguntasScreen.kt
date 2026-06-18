@@ -18,9 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,9 +36,20 @@ fun PerguntasScreen(
     quizScreenViewModel: PerguntasScreenViewModel
 ) {
 
-    val acertos by quizScreenViewModel.acertos.observeAsState(0)
+    val alternativaSelecionada by quizScreenViewModel
+        .alternativaSelecionada
+        .observeAsState(null)
 
-    val alternativaSelecionada by quizScreenViewModel.alternativaSelecionada.observeAsState("")
+    val questaoRespondida by quizScreenViewModel
+        .questaoRespondida
+        .observeAsState(false)
+
+    val indicePerguntaAtual by quizScreenViewModel
+        .indicePerguntaAtual
+        .observeAsState(0)
+
+    val perguntaAtual =
+        quizScreenViewModel.perguntas[indicePerguntaAtual]
 
     Box(
         modifier = Modifier
@@ -74,20 +82,44 @@ fun PerguntasScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CardNumeroPergunta(numero = 0)
+                    CardNumeroPergunta(
+                        numero = indicePerguntaAtual + 1
+                    )
                 }
             }
 
             CardPerguntas(
-                pergunta = "Qual a capital da França?",
-                alternativas = listOf("Londres", "Berlim", "Paris", "Madrid"),
-                alternativaCorreta = "Paris",
+                pergunta = perguntaAtual.enunciado,
+                alternativas = perguntaAtual.alternativas,
+                alternativaCorreta = perguntaAtual.alternativas[
+                    perguntaAtual.respostaCorretaIndex
+                ],
                 alternativaSelecionada = alternativaSelecionada,
+                questaoRespondida = questaoRespondida,
                 respondeuQuestao = { alternativa ->
-                    quizScreenViewModel.alterarAlternativaSelecionada(alternativa)
-                    quizScreenViewModel.incrementaPontuacao(alternativaCorreta = "Paris")
+                    quizScreenViewModel.responderPergunta(
+                        alternativaSelecionada = alternativa
+                    )
                 }
             )
+
+            if (questaoRespondida) {
+                Button(
+                    onClick = {
+
+                        if (
+                            indicePerguntaAtual <
+                            quizScreenViewModel.perguntas.size - 1
+                        ) {
+                            quizScreenViewModel.proximaPergunta()
+                        } else {
+                            navController.navigate("final")
+                        }
+                    }
+                ) {
+                    Text("Próxima")
+                }
+            }
         }
     }
 }
@@ -97,33 +129,50 @@ fun CardPerguntas(
     pergunta: String,
     alternativas: List<String>,
     alternativaCorreta: String,
-    alternativaSelecionada: String,
+    alternativaSelecionada: String?,
+    questaoRespondida: Boolean,
     respondeuQuestao: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-
     Card(
-        modifier = Modifier. fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 3.dp
         )
-        ) {
+    ) {
 
-            Column(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
             Pergunta(text = pergunta)
 
             alternativas.forEach { alternativa ->
+
+                val corBotao = when {
+                    !questaoRespondida -> Color.White
+
+                    alternativa == alternativaSelecionada &&
+                            alternativa == alternativaCorreta -> Color.Green
+
+                    alternativa == alternativaSelecionada &&
+                            alternativa != alternativaCorreta -> Color.Red
+
+                    else -> Color.White
+                }
+
                 BotaoAlternativa(
                     text = alternativa,
+                    containerColor = corBotao,
                     onClick = {
-                        respondeuQuestao(alternativa)
+                        if (!questaoRespondida) {
+                            respondeuQuestao(alternativa)
+                        }
                     }
                 )
             }

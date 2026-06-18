@@ -17,40 +17,62 @@ import androidx.navigation.compose.rememberNavController
 import com.example.quiz.screens.FinalScreen
 import com.example.quiz.screens.InicioScreen
 import com.example.quiz.screens.perguntas.PerguntasScreen
+import com.example.quiz.screens.perguntas.PerguntasScreenViewModel
 import com.example.quiz.ui.theme.QuizTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
+
             QuizTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    //  InicioScreen (modifier = Modifier.padding(innerPadding),)
-                    // Pergunta1 (modifier = Modifier.padding(innerPadding),)
-                    // Pergunta2 (modifier = Modifier.padding(innerPadding),)
-                    // Pergunta3 (modifier = Modifier.padding(innerPadding),)
-                    // FinalScreen (modifier = Modifier.padding(innerPadding),)
+
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
 
                     val navController = rememberNavController()
+
+                    val quizScreenViewModel: PerguntasScreenViewModel =
+                        viewModel()
 
                     NavHost(
                         navController = navController,
                         startDestination = "inicio",
                         exitTransition = {
-                            slideOutOfContainer (
-                                towards  = AnimatedContentTransitionScope
+                            slideOutOfContainer(
+                                towards = AnimatedContentTransitionScope
                                     .SlideDirection.Up,
-                                animationSpec = tween (1000 )
-                            ) + fadeOut(animationSpec = tween (1000))
+                                animationSpec = tween(1000)
+                            ) + fadeOut(
+                                animationSpec = tween(1000)
+                            )
                         }
                     ) {
-                        composable (route = "inicio") { InicioScreen(navController = navController) }
-                        composable( route = "perguntas" ) { PerguntasScreen(
-                            navController = navController,
-                            quizScreenViewModel = viewModel())
+
+                        composable(route = "inicio") {
+                            InicioScreen(
+                                navController = navController
+                            )
                         }
-                        composable( route = "final" ) {FinalScreen(navController = navController) }
+
+                        composable(route = "perguntas") {
+                            PerguntasScreen(
+                                navController = navController,
+                                quizScreenViewModel = quizScreenViewModel
+                            )
+                        }
+
+                        composable(route = "final") {
+                            FinalScreen(
+                                navController = navController,
+                                quizScreenViewModel = quizScreenViewModel
+                            )
+                        }
                     }
                 }
             }

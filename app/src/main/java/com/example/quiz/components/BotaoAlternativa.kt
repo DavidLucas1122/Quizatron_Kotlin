@@ -14,13 +14,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BotaoAlternativa(
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    containerColor: Color = Color.White
 ) {
     Button(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White
+            containerColor = containerColor
         ),
         shape = RoundedCornerShape(10.dp)
     ) {
